@@ -151,9 +151,9 @@ function log_in_breadth(obj) {
   }
 }
 
-// ---------------
+// ===============
 // комплексная задача на Promise и event loop -- симулятор запуска ракеты
-// ---------------
+// ===============
 
 /**
  * 1) delay()
@@ -261,4 +261,326 @@ async function prepareForLaunch() {
 }
 
 // Запуск симуляции
-prepareForLaunch();
+// prepareForLaunch();
+
+// ---------------
+
+// ===============
+// [задача с собеса] на Event loop + Promise
+// ===============
+
+// console.log("1");
+
+// const promise1 = Promise.resolve().then(() => {
+//   console.log("2");
+
+//   const timer2 = setTimeout(() => {
+//     console.log("3");
+//   }, 0);
+// });
+
+// const timer1 = setTimeout(() => {
+//   console.log("4");
+//   const promise2 = Promise.resolve().then(() => {
+//     console.log("5");
+//   });
+// }, 0);
+
+// console.log("6");
+
+/**
+ * 1
+ * 6
+ * 2
+ * 4
+ * 5
+ * 3
+ */
+
+// ---------------
+
+// ===============
+// [тренировка задач] на Event loop + Promise
+// ===============
+
+// console.log('1');
+
+// Promise.resolve().then(() => {
+//   console.log('2');
+// });
+
+// Promise.resolve().then(() => {
+//   console.log('3');
+//   return 'foo';
+// }).then(() => {
+//   console.log('4');
+// });
+
+// Promise.resolve().then(() => {
+//   console.log('5');
+// });
+
+// console.log('6');
+
+/**
+ * 1
+ * 6
+ * 2
+ * 3
+ * 5
+ * 4
+ */
+
+// ---------------
+
+// Promise.resolve().then(() => {
+//   console.log('1');
+//   Promise.resolve().then(() => {
+//     console.log('2');
+//   });
+// });
+
+// Promise.resolve().then(() => {
+//   console.log('3');
+//   Promise.resolve().then(() => {
+//     console.log('4');
+//   });
+// });
+
+/**
+ * 1
+ * 3
+ * 2
+ * 4
+ */
+
+// ---------------
+
+// console.log('1');
+
+// setTimeout(() => {
+//   console.log('2');
+//   Promise.resolve().then(() => {
+//     console.log('3');
+//   });
+// }, 0);
+
+// Promise.resolve().then(() => {
+//   console.log('4');
+//   setTimeout(() => {
+//     console.log('5');
+//   }, 0);
+// });
+
+// console.log('6');
+
+/**
+ * 1
+ * 6
+ * 4
+ * 2
+ * 3
+ * 5
+ */
+
+// ---------------
+
+// async function async1() {
+//   console.log("1");
+//   await async2();
+//   console.log("2"); //1
+// }
+
+// async function async2() {
+//   console.log("3");
+// }
+
+// console.log("4");
+
+// setTimeout(() => { ///1
+//   console.log("5");
+// }, 0);
+
+// async1();
+
+// new Promise((resolve) => {
+//   console.log("6");
+//   resolve();
+// }).then(() => {
+//   console.log("7"); //2
+// });
+
+// console.log("8");
+
+/**
+ * 4
+ * 1
+ * 3
+ * 6
+ * 8
+ * 2
+ * 7
+ * 5
+ */
+
+// ---------------
+
+// async function foo() {
+//   console.log("1");
+// }
+
+// async function bar() {
+//   console.log("2");
+//   await foo();
+//   console.log("3"); //1
+// }
+
+// console.log("4");
+
+// bar();
+
+// console.log("5");
+
+// Promise.resolve()
+//   .then(() => {
+//     console.log("6");//2
+//   })
+//   .then(() => {
+//     console.log("7");//3
+//   });
+
+// console.log("8");
+
+/**
+ * 4
+ * 2
+ * 1
+ * 5
+ * 8
+ * 3
+ * 6
+ * 7
+ */
+
+// ---------------
+
+// console.log("1");
+
+// setTimeout(() => {
+//   console.log("2");
+//   Promise.resolve().then(() => {
+//     console.log("3");
+//   });
+// }, 0);
+
+// async function main() {
+//   console.log("4");
+
+//   await new Promise((resolve) => {
+//     console.log("5");
+//     resolve();
+//   });
+
+//   console.log("6");
+
+//   await Promise.resolve().then(() => {
+//     console.log("7");
+//   });
+
+//   console.log("8");
+
+//   setTimeout(() => {
+//     console.log("9");
+//   }, 0);
+// }
+
+// main();
+
+// console.log("10");
+
+// Promise.resolve()
+//   .then(() => {
+//     console.log("11");
+//   })
+//   .then(() => {
+//     console.log("12");
+//   });
+
+// console.log("13");
+
+/**
+ * 1
+ * 4
+ * 5
+ * 10
+ * 13
+ * 6
+ * 11
+ * 7
+ * 12
+ * 8
+ * 2
+ * 3
+ * 9
+ */
+
+// ---------------
+
+console.log('1');
+
+async function main() {
+  console.log('2');
+
+  try {
+    await Promise.reject('Error 1');
+  } catch (e) { 
+    console.log('3');
+  }
+
+  console.log('4');
+
+  await Promise.resolve() 
+    .then(() => {
+      console.log('5');
+      throw new Error('Error 2');
+    })
+    .catch(() => {
+      console.log('6');
+      return 'Fixed';
+    })
+    .then((res) => {
+      console.log('7', res);
+    })
+    .finally(() => {
+      console.log('8');
+    });
+
+  console.log('9');
+}
+
+main();
+
+Promise.resolve()
+  .then(() => {
+    console.log('10');
+  })
+  .then(() => { 
+    console.log('11');
+  });
+
+console.log('12');
+
+/**
+ * 1
+ * 2
+ * 12
+ * 3
+ * 4
+ * 10
+ * 5
+ * 11
+ * 6
+ * 7 Fixed
+ * 8
+ * 9
+ */
